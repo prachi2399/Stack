@@ -131,4 +131,45 @@ public class question{
         st.push(new int[]{day++,price});
         return span;
     }
+    //20
+    public boolean isValid(String s) {
+        Stack<Character> st = new Stack<>();
+        
+        boolean res=false;
+        for(int i=0;i<s.length();i++){
+            char ch = s.charAt(i);
+            if(s.charAt(i)=='('||s.charAt(i)=='{'||s.charAt(i)=='['){
+                st.push(s.charAt(i));
+            }
+            else {
+                if(st.size()==0) return false;
+            else if(s.charAt(i)==')'&& st.peek()!='('){
+               return false;
+            }
+            else if(s.charAt(i)=='}'&& st.peek()!='{'){
+               return false;
+            }
+            else if(s.charAt(i)==']'&& st.peek()!='['){
+               return false;
+            }
+            else st.pop();
+            }
+        }
+        return st.size()==0;
+    }
+
+    //946
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        
+        Stack<Integer> st = new Stack<>();
+        
+        for(int i=0,j=0;i<pushed.length;i++){
+            st.push(pushed[i]);
+            while(st.size()>0&&st.peek()==popped[j]){
+                st.pop();
+                j++;
+            }
+        }
+        return st.size()==0;
+    }
 }
