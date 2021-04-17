@@ -48,36 +48,37 @@ public class question{
     public static int[] nextSmallerElementRight(int[] nums){
         int n = nums.length;
         int[] ans = new int[n];
-        for(int i=0;i<n;i++) ans[i] = -1;
+        Arrays.fill(ans,n);
         Stack<Integer> st = new Stack<>();
-
-        st.push(nums[n-1]);
         
-        for(int i = n-2; i>=0; i--){
-            while(st.size()>0 && nums[st.peek()]>nums[i]){
+        for(int i = n-1; i>=0; i--){
+            while(st.size()>0 && nums[st.peek()]>=nums[i]){
                 st.pop();
             }
             if(st.size()!=0)  ans[i]=st.peek();
             st.push(i);
         }
+        
+        for(int ele:ans)
+            System.out.print(ele+" ");
         return ans;
     }
 
     public static int[] nextSmallerElementLeft(int[] nums){
         int n = nums.length;
         int[] ans = new int[n];
-        for(int i=0;i<n;i++) ans[i] = -1;
+        Arrays.fill(ans,-1);
         Stack<Integer> st = new Stack<>();
-
-        st.push(nums[0]);
         
         for(int i = 0; i<n; i++){
-            while(st.size()>0 && nums[st.peek()]>nums[i]){
+            while(st.size()>0 && nums[st.peek()]>=nums[i]){
                 st.pop();
             }
             if(st.size()!=0)  ans[i]=st.peek();
             st.push(i);
         }
+        for(int ele:ans)
+            System.out.print(ele+" ");
         return ans;
     }
 
@@ -279,5 +280,130 @@ public class question{
             arr[i]=ans.get(i);
         }
         return arr;
+    }
+
+    // largest area of histogram
+    public int largestRectangleArea(int[] heights) {
+        int[] nsol=nextSmallerElementLeft(heights);
+        int[] nsor=nextSmallerElementRight(heights);
+        
+        int area=0;
+        for(int i=0;i<heights.length;i++){
+            int wt = nsor[i]-nsol[i]-1;
+            int h=heights[i];
+            area=Math.max(area,wt*h);
+        }
+        return area;
+    }
+    // leetcode 85
+    public int maximalRectangle(char[][] matrix) {
+        if(matrix.length==0||matrix[0].length==0) return 0;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        
+        int maxRec=0;
+        int[] height=new int[m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                char ch = matrix[i][j];
+                height[j]=ch=='1'?height[j]+1:0;
+            }
+            maxRec=Math.max(maxRec,largestRectangleArea(height));
+        }
+        return maxRec;
+    }
+    
+    public int largestRectangleArea(int[] heights) {
+        int[] nsol=nextSmallerElementLeft(heights);
+        int[] nsor=nextSmallerElementRight(heights);
+        
+        int area=0;
+        for(int i=0;i<heights.length;i++){
+            int wt = nsor[i]-nsol[i]-1;
+            int h=heights[i];
+            area=Math.max(area,wt*h);
+        }
+        return area;
+    }
+
+    //leetcode 221
+    public int maximalSquare(char[][] matrix) {
+        if(matrix.length==0||matrix[0].length==0) return 0;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        
+        int maxRec=0;
+        int[] height=new int[m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                char ch = matrix[i][j];
+                height[j]=ch=='1'?height[j]+1:0;
+            }
+            maxRec=Math.max(maxRec,largestRectangleArea(height));
+        }
+        return maxRec;
+    }
+    
+    public int largestRectangleArea(int[] heights) {
+        int[] nsol=nextSmallerElementLeft(heights);
+        int[] nsor=nextSmallerElementRight(heights);
+        
+        int area=0;
+        for(int i=0;i<heights.length;i++){
+            int wt = nsor[i]-nsol[i]-1;
+            int h=heights[i];
+            area=Math.max(area,h>wt?wt*wt:h*h);
+        }
+        return area;
+    }
+
+    // largest area histogram alternate
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> st = new Stack<>();
+            st.push(-1);
+            int n= heights.length;
+            int maxArea=0;
+            for(int i=0;i<heights.length;i++){
+                while(st.size()>1 && heights[st.peek()]>=heights[i]) {
+                    int idx=st.pop();
+                    int wt=i-st.peek()-1;
+                    int h=heights[idx];
+                    maxArea = Math.max(maxArea, wt*h);
+            }
+            st.push(i);
+        }  
+            while(st.peek()!=-1){
+                int idx=st.pop();
+                int h = heights[idx];
+                int wt= n-st.peek()-1;
+                maxArea = Math.max(maxArea, wt*h);
+            }
+        return maxArea;
+    }
+
+    // leetcode 402    
+    public String removeKdigits(String num, int k) {
+        ArrayList<Character> st = new ArrayList<>();
+    
+        for(int i=0;i<num.length();i++){
+            char ch = num.charAt(i);
+            while(st.size()!=0&&st.get(st.size()-1)>ch&&k>0){
+                st.remove(st.size()-1);
+                k--;
+            }
+            st.add(ch);
+        }
+        while(k-->0){
+            st.remove(st.size()-1);
+        }
+        
+        StringBuilder s = new StringBuilder();
+        while(st.size()!=0&&st.get(0)=='0'){
+            st.remove(0);
+        }
+        for(int i=0;i<st.size();i++){
+            s.append(st.get(i));
+        }
+        return s.length()==0?"0":new String(s);
     }
 }
