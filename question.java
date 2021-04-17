@@ -172,4 +172,112 @@ public class question{
         }
         return st.size()==0;
     }
+
+    //1249
+    public String minRemoveToMakeValid(String s) {
+        Stack<Integer> st = new Stack<>();
+        char[] arr=s.toCharArray();
+        
+        for(int i=0;i<s.length();i++){
+            char ch=s.charAt(i);
+            if(ch=='('){
+                st.push(i);
+            }
+            else  if(ch==')'){
+                if(st.size()!=0&&s.charAt(st.peek())=='(') st.pop();
+                else st.push(i);   
+            }
+        }
+        
+        while(st.size()!=0){
+            arr[st.peek()]='#';
+            st.pop();
+        }
+        
+        StringBuilder ans=new StringBuilder();
+        
+        for(int i=0;i<s.length();i++){
+            if(arr[i]!='#') {
+                ans.append(arr[i]);
+                }
+        }
+        return new String(ans);
+        
+    }
+
+    // alt 1249
+    public String minRemoveToMakeValid(String s) {
+        ArrayDeque<Integer> st = new ArrayDeque<>();
+        
+        int n=s.length();
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            if (ch == '(')
+                st.addFirst(i);
+            else if (ch == ')') {
+                if (st.size() != 0 && s.charAt(st.getFirst()) == '(')
+                    st.removeFirst();
+                else
+                    st.addFirst(i);
+            }
+        }
+        
+        StringBuilder ans=new StringBuilder();
+        
+        for(int i=0;i<s.length();i++){
+            if(st.size()!=0&&st.getLast()==i) {
+                st.removeLast();
+                continue;
+                }
+            ans.append(s.charAt(i));
+        }
+        return new String(ans);
+    }
+
+    //32
+    public int longestValidParentheses(String s) {
+        Stack<Integer> st=new Stack<>();
+        st.push(-1);
+        int n = s.length();
+        int len=0;
+        for(int i=0;i<n;i++){
+            char ch=s.charAt(i);
+            if(ch=='(') st.push(i);
+             else if(ch==')'){
+                 if(st.size()!=1 && s.charAt(st.peek())=='('){
+                     st.pop();
+                     len=Math.max(len,i-st.peek());
+                 }
+                 else st.push(i);
+             }
+        }
+        return len;
+    }
+
+    // asteroids collide
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> st = new Stack<>();
+        for(int ele:asteroids){
+            if(ele>0) {
+                st.push(ele);
+                continue;
+            }
+            while(st.size()>0&&st.peek()>0&&st.peek()<-ele) st.pop();
+            
+            if(st.size()!=0&&st.peek()==-ele) st.pop();
+            else if(st.size()==0||st.peek()<0) st.push(ele);
+            else{
+                
+            }
+        }
+        ArrayList<Integer> ans=new ArrayList<>();
+        while(st.size()>0){
+            ans.add(0,st.pop());
+        }
+        int[] arr = new int[ans.size()];
+        for(int i=0;i<ans.size();i++){
+            arr[i]=ans.get(i);
+        }
+        return arr;
+    }
 }
