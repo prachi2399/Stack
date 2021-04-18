@@ -406,4 +406,204 @@ public class question{
         }
         return s.length()==0?"0":new String(s);
     }
+
+    //316 remove duplicate char to make lexographical smallest string
+    public String removeDuplicateLetters(String s) {
+        
+        int n = s.length();
+        StringBuilder st = new StringBuilder();
+        boolean[] vis = new boolean[26];
+        int[] freq= new int[26];
+        
+        for(int i=0;i<n;i++){
+            freq[s.charAt(i)-'a']++;
+        }
+        
+        for(int i=0;i<n;i++){
+            char ch = s.charAt(i);
+            freq[ch-'a']--;
+            
+            if(vis[ch-'a']) continue;
+            
+            while(st.length()!=0 && st.charAt(st.length()-1)>ch && freq[st.charAt(st.length()-1)-'a']>0) {
+                char rch = st.charAt(st.length()-1);
+                vis[rch-'a']=false;
+                st.deleteCharAt(st.length()-1);
+            }
+            vis[ch-'a'] = true;
+            st.append(ch);
+        }
+        
+        return new String(st);
+    }
+
+    // trapping rain water
+    public int trap(int[] height) {
+        int n = height.length;
+        int[] lheight=new int[n];
+        int[] rheight= new int[n];
+        int prev=0;
+        for(int i=0;i<n;i++){
+            lheight[i]=Math.max(height[i],prev);
+            prev=lheight[i];
+        }
+        prev=0;
+        for(int i=n-1;i>=0;i--){
+            rheight[i]=Math.max(height[i],prev);
+            prev=rheight[i];
+        }
+        int totalArea=0;
+        for(int i=0;i<n;i++){
+            totalArea+=Math.min(lheight[i],rheight[i])-height[i];
+        }
+        return totalArea;
+    }
+    // the celebrity problem
+    int celebrity(int arr[][], int n){
+    	Stack<Integer> st = new Stack<>();
+    	
+    	for(int i=0;i<n;i++) st.push(i);
+    	
+    	while(st.size()>=2){
+    	    int i=st.pop();
+    	    int j=st.pop();
+    	    if(arr[i][j]==1){
+    	        st.push(j);
+    	    }
+    	    else if(arr[j][i]==1){
+    	        st.push(i);
+    	    }
+    	}
+    	int pot = st.pop();
+    	for(int i=0;i<arr.length;i++){
+    	    if(i!=pot)
+    	    {
+    	        if(arr[pot][i]==1||arr[i][pot]==0) return -1;
+    	}
+    }
+    return pot;
+}
+//arithmatic postfix evalution
+public int arithmaticPostfix(Stirng s){
+    if(s.length()=0) return 0;
+
+    Stack<Integer> st = new Stack<>();
+    for(int i=0;i<s.length();i++){
+        char ch = s.charAt(i);
+        if(ch>='0'&&ch>='10'){
+            st.push(ch-'0');
+        }
+        else if (ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='^') {
+            int p1 = st.pop();
+            int p2 = st.pop();
+            int ans = 0;
+            if(ch=='+') ans = p1 + p2;
+            if(ch=='-') ans = p1 - p2;
+            if(ch=='*') ans = p1 * p2; 
+            if(ch=='/') ans = p1 / p2;
+            if(ch=='^') ans = p1 ^ p2;
+            st.push(ans);
+        }
+    }
+    return st.size()==1?st.pop():-1;
+} 
+
+// infix to postfix
+public static int precedance(char ch){
+    if(ch=='^') return 3;
+    else if(ch=='*'||ch=='/') return 2;
+    else if(ch=='+'||ch=='-') return 1;
+    return -1;
+}
+public static String infixToPostfix(String exp) {
+    // Your code here
+    Stack<Character> st = new Stack<>();
+    StringBuilder sb = new StringBuilder();
+    int n = exp.length();
+    
+    for(int i=0;i<n;i++){
+        char ch = exp.charAt(i);
+        if((ch>='a'&&ch<='z')||(ch=='A'&&ch=='Z')) sb.append(ch);
+        else if(ch=='(') st.push(ch);
+        else if(ch==')'){
+            while(!st.isEmpty()&&st.peek()!='(')  sb.append(st.pop());
+            
+            if(!(!st.isEmpty()&&st.peek()!='(')) st.pop();
+        }
+        else {
+            while(st.size()!=0&&precedance(ch)<=precedance(st.peek())) {
+                sb.append(st.pop());
+            }
+            st.push(ch);
+        }
+    }
+    
+    while(st.size()!=0){
+        sb.append(st.pop());
+    }
+    return sb.toString();
+} 
+
+// reverse a stack using recursion
+public static class reverseStack{
+    Stack<Integer> st = new Stack<>();
+    public void insertAtBottom(int x){
+        if(st.size()==0) st.push(x);
+
+        else {
+            char a = st.pop();
+            insertAtBottom(x);
+            st.push(a);
+        }
+}
+    public void reverse(){
+        if(st.size()>0){
+            char ch = st.pop();
+            reverse();
+
+            insertAtBottom(ch);
+    }
+
+    public void reversal(){
+        st.push('1');
+        st.push('2');
+        st.push('3');
+        st.push('4');
+        reverse();
+    }
+}
+}
+// sort a stack using recursion
+public static class sortStack{
+    Stack<Integer> st = new Stack<>();
+    static void sortedInsert(Stack<Integer> s, int x)
+    {
+        if(s.size()==0||x>st.peek()){
+            s.push(x);
+        }
+        char a = st.peek();
+        sortedInsert(s,x);
+        st.push(a);
+    }
+ 
+    static void sortStack(Stack<Integer> s)
+    {
+        if(s.size()!=0){
+            int x = s.pop();
+            sortStack(s);
+            sortedInsert(s,x);
+        }
+    }
+
+    public void sortal(){
+        st.push('1');
+        st.push('2');
+        st.push('3');
+        st.push('4');
+        sort();
+    }
+}
+}
+
+
 }
