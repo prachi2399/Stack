@@ -639,5 +639,63 @@ public int[][] merge(int[][] intervals) {
     return ans;
 }
 
+// implement queue using stack
+/** Initialize your data structure here. */
+Stack<Integer> st1;
+Stack<Integer> st2;
+public MyQueue() {
+    st1 = new Stack<>();
+    st2 = new Stack<>();
+}
+
+/** Push element x to the back of queue. */
+public void push(int x) {
+    if(st1.size()==0) {
+        st1.push(x);
+    }
+    else {
+    while(!st1.isEmpty()){
+        st2.push(st1.pop());
+    }
+    st1.push(x);
+    while(!st2.isEmpty()){
+        st1.push(st2.pop());
+    }
+    }
+}
+
+/** Removes the element from in front of queue and returns that element. */
+public int pop() {
+    return st1.pop();
+}
+
+/** Get the front element. */
+public int peek() {
+    return st1.peek();
+}
+
+/** Returns whether the queue is empty. */
+public boolean empty() {
+    return st1.size()==0;
+}
+}
+
+public String webSite(String s){
+    if(s.length()==0) return "";
+    
+    StringBuilder ans = new StringBuilder();
+    int sidx=0;
+    if(s.substring(0,4).equals("ftp")||s.substring(0,5).equals("http")){
+         s.substring(0,4).equals("ftp")?ans.append("ftp"):ans.append("http");
+         sidx = s.substring(0,4).equals("ftp")?4:5;         
+    }
+    ans.append("://");
+    int eidx=s.indexOf("ru");
+
+    String remaining = s.substring(eidx-sidx+1);
+    ans.append(remaining);
+    ans.append(".ru/");
+    ans.append(s.substring(eidx+2));
+}
 
 }
