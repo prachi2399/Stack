@@ -605,7 +605,39 @@ public static class sortStack{
 }
 }
 
-// merge o
+// merge overlapping interval
+public int[][] merge(int[][] intervals) {
+        
+    Arrays.sort(intervals,(a,b)->{
+       return a[0]-b[0]; 
+    });
+    Stack<int[]> st = new Stack<>();
+    st.push(new int[]{intervals[0][0],intervals[0][1]});
+    for(int i=1;i<intervals.length;i++){
+        int[] top = st.peek();
+        if(top[1]>=intervals[i][0]){
+            st.pop();
+            int nTop=top[1]>intervals[i][1]?top[1]:intervals[i][1];
+            st.push(new int[]{top[0],nTop});
+            }
+        else st.push(new int[]{intervals[i][0],intervals[i][1]});
+    }
+    
+    Stack<int[]> nst = new Stack<>();
+    while(st.size()!=0){
+        nst.push(st.pop());
+    }
+    
+    int[][] ans = new int[nst.size()][2];
+    int i = 0;
+    while(nst.size()!=0){
+        int[] pop = nst.pop();
+        ans[i][0] = pop[0];
+        ans[i][1] = pop[1];
+        i++;
+    }
+    return ans;
+}
 
 
 }
